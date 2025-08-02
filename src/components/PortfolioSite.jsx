@@ -76,7 +76,7 @@ function Experience() {
             Software Engineer Intern - Emath Inc. (Jul 2022 - Aug 2022)
           </h3>
           <p className="text-sm leading-relaxed">
-            • Proposed and built a camera-free facial expression rendering system with 93\% accuracy in internal tests, by linking API of AI real-time emotion analysis based on voice tone to VR avatars on 3D computer graphics software.<br />
+            • Proposed and built a camera-free facial expression rendering system with 93% accuracy in internal tests, by linking API of AI real-time emotion analysis based on voice tone to VR avatars on 3D computer graphics software.<br />
             • Innovated reliance on facial tracking hardware and increased accessibility for 4,300+ users, reducing VR setup costs by £300 per user on average.
           </p>
         </li>

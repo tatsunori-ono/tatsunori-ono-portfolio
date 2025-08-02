@@ -52,7 +52,7 @@ function Intro() {
       </p>
       <p>
         I also love all things Vocaloid and creating multimedia. Turning creative ideas into interactive experiences
-        is the part I enjoy (as you can tell from the astroids you see swirling behind this text.).
+        is the part I enjoy (as you can tell from the astroids you see swirling behind this text).
       </p>
     </section>
   );

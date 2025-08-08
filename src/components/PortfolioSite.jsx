@@ -65,7 +65,7 @@ function Experience() {
       <ul className="space-y-4">
         <li>
           <h3 className="font-semibold">
-            Web Development Intern - Crypton Future Media Inc. (Sep&nbsp;2025)
+            Web Development Intern - Crypton Future Media Inc. (Aug 2025 &ndash; Sep&nbsp;2025)
           </h3>
           <p className="text-sm leading-relaxed">
             • Received an offer for back-end web development intern at the company (famously known for developing Hatsune Miku), and will contribute to their digital music e-commerce system, which manages 200,000+ audio products in the database.
@@ -73,7 +73,7 @@ function Experience() {
         </li>
         <li>
           <h3 className="font-semibold">
-            Software Engineer Intern - Emath Inc. (Jul 2022 - Aug 2022)
+            Software Engineer Intern - Emath Inc. (Jul 2022 &ndash; Aug 2022)
           </h3>
           <p className="text-sm leading-relaxed">
             • Proposed and built a camera-free facial expression rendering system with 93% accuracy in internal tests, by linking API of AI real-time emotion analysis based on voice tone to VR avatars on 3D computer graphics software.<br />
@@ -81,13 +81,13 @@ function Experience() {
           </p>
         </li>
         <li>
-          <h3 className="font-semibold">Machine Learning Research Intern - Fujitsu Ltd. (Jun 2022 -- Jul 2022)</h3>
+          <h3 className="font-semibold">Machine Learning Research Intern - Fujitsu Ltd. (Jun 2022 &ndash; Jul 2022)</h3>
           <p className="text-sm leading-relaxed">
             • Researched applications of AI deductive reasoning systems on quantum computing output with the head of Fujitsu Research by analysing causal chains in probabilistic graphs.
           </p>
         </li>
         <li>
-          <h3 className="font-semibold">Independent Stock Trader - Astroid Inc. (2019 - Present)</h3>
+          <h3 className="font-semibold">Independent Stock Trader - Astroid Inc. (2019 &ndash; Present)</h3>
           <p className="text-sm leading-relaxed">
             • Grew ¥491 Million portfolio (approx. £2.5 Million) portfolio to ¥240 Million (approx. £1.2 Million) (+48.7%) within a year, focusing on semiconductors, Japanese subculture, and transport infrastructure sectors.<br />
             • Developed Python scripts for market-sentiment analysis and automated trade execution.

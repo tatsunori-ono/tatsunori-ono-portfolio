@@ -89,7 +89,7 @@ function Experience() {
         <li>
           <h3 className="font-semibold">Independent Stock Trader - Astroid Inc. (2019 &ndash; Present)</h3>
           <p className="text-sm leading-relaxed">
-            • Grew ¥491 Million portfolio (approx. £2.5 Million) portfolio to ¥240 Million (approx. £1.2 Million) (+48.7%) within a year, focusing on semiconductors, Japanese subculture, and transport infrastructure sectors.<br />
+            • Grew Japanese stock portfolio by 48.7% within a year, focusing on semiconductors, Japanese subculture, and transport infrastructure sectors.<br />
             • Developed Python scripts for market-sentiment analysis and automated trade execution.
           </p>
         </li>

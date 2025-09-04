@@ -65,7 +65,7 @@ function Experience() {
       <ul className="space-y-4">
         <li>
           <h3 className="font-semibold">
-            Web Development Intern - Crypton Future Media Inc. (Aug 2025 &ndash; Sep&nbsp;2025)
+            Full Stack Web Development Intern - Crypton Future Media Inc. (Aug 2025 &ndash; Sep&nbsp;2025)
           </h3>
           <p className="text-sm leading-relaxed">
             • Received an offer for back-end web development intern at the company (famously known for developing Hatsune Miku), and will contribute to their digital music e-commerce system, which manages 200,000+ audio products in the database.

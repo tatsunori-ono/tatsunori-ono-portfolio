@@ -60,40 +60,86 @@ function Intro() {
 
 function Experience() {
   return (
-    <section className="space-y-6">
+    <section className="space-y-8">
       <h2 className="text-2xl font-semibold">Experience</h2>
-      <ul className="space-y-4">
-        <li>
-          <h3 className="font-semibold">
-            Full-Stack Web Development Intern - Crypton Future Media Inc. (Aug 2025 &ndash; Sep&nbsp;2025)
-          </h3>
-          <p className="text-sm leading-relaxed">
-            • Received an offer for back-end web development intern at the company (famously known for developing Hatsune Miku), and will contribute to their digital music e-commerce system, which manages 200,000+ audio products in the database.
-          </p>
-        </li>
-        <li>
-          <h3 className="font-semibold">
-            Software Engineer Intern - Emath Inc. (Jul 2022 &ndash; Aug 2022)
-          </h3>
-          <p className="text-sm leading-relaxed">
-            • Proposed and built a camera-free facial expression rendering system with 93% accuracy in internal tests, by linking API of AI real-time emotion analysis based on voice tone to VR avatars on 3D computer graphics software.<br />
-            • Innovated reliance on facial tracking hardware and increased accessibility for 4,300+ users, reducing VR setup costs by £300 per user on average.
-          </p>
-        </li>
-        <li>
-          <h3 className="font-semibold">Machine Learning Research Intern - Fujitsu Ltd. (Jun 2022 &ndash; Jul 2022)</h3>
-          <p className="text-sm leading-relaxed">
-            • Researched applications of AI deductive reasoning systems on quantum computing output with the head of Fujitsu Research by analysing causal chains in probabilistic graphs.
-          </p>
-        </li>
-        <li>
-          <h3 className="font-semibold">Independent Stock Trader - Astroid Inc. (2019 &ndash; Present)</h3>
-          <p className="text-sm leading-relaxed">
-            • Grew Japanese stock portfolio by 48.7% within a year, focusing on semiconductors, Japanese subculture, and transport infrastructure sectors.<br />
-            • Developed Python scripts for market-sentiment analysis and automated trade execution.
-          </p>
-        </li>
-      </ul>
+      
+      {/* Work Experience */}
+      <div className="space-y-6">
+        <h3 className="text-xl font-semibold text-gray-800 border-b border-gray-300 pb-2">Work Experience</h3>
+        <ul className="space-y-4 ml-4">
+          <li>
+            <h4 className="font-semibold">
+              Full-Stack Web Development Intern - Crypton Future Media Inc. (Aug 2025 &ndash; Sep&nbsp;2025)
+            </h4>
+            <p className="text-sm leading-relaxed">
+              • Received an offer for full-stack web development intern at the company famously known for developing Hatsune Miku. <br />
+              • Built a "Pinterest x Creative Commons" web app for the Vocaloid community, where creators upload illustrations with explicit license terms (non-commercial, derivative, attribution) and music producers discover artworks for track thumbnails and contact the creators.<br />
+              • Developed a swipe-based discovery UI ("Tinder-style") using React, and programmed the backend in Laravel to rank candidates by hashtags, categories, and artworks pinned on users' artboards.<br />
+              • Provisioned a fresh AlmaLinux cloud instance and deployed the app by configuring the Nginx web server and MySQL user permissions.<br />
+              • Delivered the project end-to-end in 2 weeks and demoed live to the CEO, 20+ engineers, and HR, earning praise for decision-making and task prioritisation, and received a return offer.
+            </p>
+          </li>
+          <li>
+            <h4 className="font-semibold">
+              Software Engineer Intern - Emath Inc. (Jul 2022 &ndash; Aug 2022)
+            </h4>
+            <p className="text-sm leading-relaxed">
+              • Proposed and built a camera-free facial expression rendering system with 93% accuracy in internal tests, by linking API of AI real-time emotion analysis based on voice tone to VR avatars on 3D computer graphics software.<br />
+              • Innovated reliance on facial tracking hardware and increased accessibility for 4,300+ users, reducing VR setup costs by £300 per user on average.
+            </p>
+          </li>
+          <li>
+            <h4 className="font-semibold">Machine Learning Research Intern - Fujitsu Ltd. (Jun 2022 &ndash; Jul 2022)</h4>
+            <p className="text-sm leading-relaxed">
+              • Researched applications of AI deductive reasoning systems on quantum computing output with the head of Fujitsu Research by analysing causal chains in probabilistic graphs.
+            </p>
+          </li>
+          <li>
+            <h4 className="font-semibold">Independent Stock Trader - Astroid Inc. (2019 &ndash; Present)</h4>
+            <p className="text-sm leading-relaxed">
+              • Grew Japanese stock portfolio by 48.7% within a year, focusing on semiconductors, Japanese subculture, and transport infrastructure sectors.<br />
+              • Developed Python scripts for market-sentiment analysis and automated trade execution.
+            </p>
+          </li>
+        </ul>
+      </div>
+
+      {/* Leadership Experience */}
+      <div className="space-y-6">
+        <h3 className="text-xl font-semibold text-gray-800 border-b border-gray-300 pb-2">Leadership Experience</h3>
+        <ul className="space-y-4 ml-4">
+          <li>
+            <h4 className="font-semibold">
+              President and Founder - Warwick Vocaloid Society (Nov 2023 &ndash; Feb 2025)
+            </h4>
+            <p className="text-sm leading-relaxed">
+              • Founded the first Vocaloid society in the UK and gained 300+ members by cooperating with the university and the Student Union.<br />
+              • Organised voice synthesis workshops, enabling members to record and transform their voices into custom Vocaloid-style voicebanks.<br />
+              • Expanded reach by growing society's social media (Xiaohongshu) to 2,000+ followers and 11,300+ likes through viral event highlights; featured on national TV by NHK (Japan's BBC-equivalent broadcaster).
+            </p>
+          </li>
+          <li>
+            <h4 className="font-semibold">
+              CTO and Co-Founder - Muzartt via MIT LaunchX (Jun 2020 &ndash; Oct 2023)
+            </h4>
+            <p className="text-sm leading-relaxed">
+              • Built Muzartt, an art & music therapy app for dementia patients, and delivered it to care homes serving 180+ residents.<br />
+              • Led technical development while running weekly agile feedback loops with Harvard Business School mentors and clinicians.<br />
+              • Pitched to investors and secured initial funding for pilot program deployment.
+            </p>
+          </li>
+          <li>
+            <h4 className="font-semibold">
+              President, Founder and Technical Leader - KIST Information Technology (Sep 2019 &ndash; Jun 2023)
+            </h4>
+            <p className="text-sm leading-relaxed">
+              • Founded and led the largest student club in the school's 27-year history, enrolling over 25% of all KIST students.<br />
+              • Designed and taught 30+ original tech courses for students, including ML in Python and web development in Ruby.<br />
+              • Mentored 50+ students in programming and helped 15+ students get accepted to top computer science programs.
+            </p>
+          </li>
+        </ul>
+      </div>
     </section>
   );
 }
@@ -157,7 +203,7 @@ function ProjectCard({ name, imgs, link }) {
   const [index, setIndex] = useState(0);
   const [hover, setHover] = useState(false);
 
-  // auto‑cycle every 3 s unless hovering
+  // auto-cycle every 3 sec unless hovering
   useEffect(() => {
     if (hover) return;
     const id = setInterval(

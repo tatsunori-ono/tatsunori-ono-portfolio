@@ -133,7 +133,9 @@ export default function AstroidFieldWithConsent() {
     /* cleanup */
     return () => {
       cancelled = true; running = false; window.removeEventListener("resize", onResize);
-      try { sourceRef.current?.stop(); sourceRef.current?.disconnect(); analyserRef.current?.disconnect(); } catch {}
+      try { sourceRef.current?.stop(); sourceRef.current?.disconnect(); analyserRef.current?.disconnect(); } catch {
+        // Ignore errors during cleanup
+      }
       audioCtxRef.current?.close(); geom.dispose(); mat.dispose(); renderer.dispose();
       if (mount.contains(renderer.domElement)) mount.removeChild(renderer.domElement);
     };

@@ -10,6 +10,7 @@ export default function AstroidFieldWithConsent() {
   const [audioReady,   setAudioReady]   = useState(false);
   const [isPlaying,    setIsPlaying]    = useState(false);
   const [errorMsg,     setErrorMsg]     = useState("");
+  const [webglAvailable, setWebglAvailable] = useState(null); // null | true | false
 
   /* ── audio refs ── */
   const audioCtxRef     = useRef(null);
@@ -39,6 +40,13 @@ export default function AstroidFieldWithConsent() {
   /* ───────── Three.js + audio setup ───────── */
   useEffect(() => {
     const mount = mountRef.current;
+    if (!mount) return;
+    const testCanvas = document.createElement("canvas");
+    if (!canCreateWebGL(testCanvas)) {
+      setWebglAvailable(false);
+      return;
+    }
+    setWebglAvailable(true);
     const { clientWidth: w, clientHeight: h } = mount;
 
     /* scene / camera / renderer */
@@ -47,7 +55,14 @@ export default function AstroidFieldWithConsent() {
     const camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
     camera.position.set(0, 4, 10);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+    } catch (e) {
+      setWebglAvailable(false);
+      setErrorMsg(`WebGL init failed: ${e instanceof Error ? e.message : String(e)}`);
+      return;
+    }
     renderer.setSize(w, h); mount.appendChild(renderer.domElement);
 
     const controls = new OrbitControls(camera, renderer.domElement);
@@ -89,19 +104,6 @@ export default function AstroidFieldWithConsent() {
     };
     window.addEventListener("resize", onResize);
 
-    /* preload audio */
-    let cancelled = false;
-    (async () => {
-      try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        audioCtxRef.current = ctx;
-        const res = await fetch("/dj-vocaloid.mp3");
-        if (!res.ok) throw new Error(`fetch failed (${res.status})`);
-        const buf = await res.arrayBuffer(); const decoded = await ctx.decodeAudioData(buf);
-        if (cancelled) return; bufferRef.current = decoded; setAudioReady(true);
-      } catch (e) { setErrorMsg(String(e)); }
-    })();
-
     /* render loop */
     const clock = new THREE.Clock(); let running = true;
     const animate = () => {
@@ -132,12 +134,32 @@ export default function AstroidFieldWithConsent() {
 
     /* cleanup */
     return () => {
-      cancelled = true; running = false; window.removeEventListener("resize", onResize);
+      running = false; window.removeEventListener("resize", onResize);
+      geom.dispose(); mat.dispose(); renderer.dispose();
+      if (mount.contains(renderer.domElement)) mount.removeChild(renderer.domElement);
+    };
+  }, []);
+
+  /* ───────── audio preload ───────── */
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        audioCtxRef.current = ctx;
+        const res = await fetch("/dj-vocaloid.mp3");
+        if (!res.ok) throw new Error(`fetch failed (${res.status})`);
+        const buf = await res.arrayBuffer(); const decoded = await ctx.decodeAudioData(buf);
+        if (cancelled) return; bufferRef.current = decoded; setAudioReady(true);
+      } catch (e) { setErrorMsg(String(e)); }
+    })();
+
+    return () => {
+      cancelled = true;
       try { sourceRef.current?.stop(); sourceRef.current?.disconnect(); analyserRef.current?.disconnect(); } catch {
         // Ignore errors during cleanup
       }
-      audioCtxRef.current?.close(); geom.dispose(); mat.dispose(); renderer.dispose();
-      if (mount.contains(renderer.domElement)) mount.removeChild(renderer.domElement);
+      audioCtxRef.current?.close();
     };
   }, []);
 
@@ -199,6 +221,27 @@ export default function AstroidFieldWithConsent() {
         </div>
       )}
 
+      {/* WebGL fallback */}
+      {webglAvailable === false && (
+        <div
+          style={{
+            position: "absolute", inset: 0,
+            background: "rgba(255,255,255,0.95)",
+            display: "flex", flexDirection: "column",
+            alignItems: "center", justifyContent: "center",
+            fontFamily: "system-ui, sans-serif", zIndex: 15, padding: 32,
+            textAlign: "center",
+          }}
+        >
+          <h2 style={{ fontSize: 22, marginBottom: 10, fontWeight: 600 }}>
+            WebGL is unavailable in this environment
+          </h2>
+          <p style={{ maxWidth: 520, fontSize: 14, opacity: 0.8 }}>
+            Enable hardware acceleration or try a different browser/device to see the background animation.
+          </p>
+        </div>
+      )}
+
       {/* play / pause controls */}
       {audioConsent === "yes" && (
         <div
@@ -243,6 +286,18 @@ const btnSmall = (enabled) => ({
   padding: "6px 12px", borderRadius: 8, border: "1px solid #ccc",
   background: enabled ? "#fff" : "#eee", cursor: enabled ? "pointer" : "not-allowed",
 });
+
+function canCreateWebGL(canvas) {
+  try {
+    const gl =
+      canvas.getContext("webgl2", { failIfMajorPerformanceCaveat: true }) ||
+      canvas.getContext("webgl", { failIfMajorPerformanceCaveat: true }) ||
+      canvas.getContext("experimental-webgl");
+    return !!gl;
+  } catch {
+    return false;
+  }
+}
 
 /* ---------- astroid-cube parametric surface ---------- */
 function astroidCubeParam(u, v, target) {

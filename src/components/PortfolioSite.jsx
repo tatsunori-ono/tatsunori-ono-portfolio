@@ -179,10 +179,15 @@ function Portfolio() {
       link: "https://github.com/Tatsunori-Ono/LEDProject/tree/main", 
       imgs: ["/thumbs/architecture.png", "/thumbs/architecture-2.png"] 
     },
-    { 
-      name: "Ticket Selling Website (Flask, PostgreSQL)", 
-      link: "", 
-      imgs: ["/thumbs/webdev.png", "/thumbs/webdev-2.png"] 
+    {
+      name: "Ticket Selling Website (Flask, PostgreSQL)",
+      link: "",
+      imgs: ["/thumbs/webdev.png", "/thumbs/webdev-2.png"]
+    },
+    {
+      name: "GiTrip - Git-Inspired Trip Planner (Node.js, Express, SQLite)",
+      link: "https://gitrip.fly.dev",
+      imgs: ["/thumbs/gitrip.png", "/thumbs/gitrip-2.png"],
     },
   ];
 

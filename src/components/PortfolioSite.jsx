@@ -147,6 +147,17 @@ function Experience() {
 function Portfolio() {
   const portfolio = [
     {
+      name: "GiTrip - Git-Inspired Trip Planner (Node.js, Express, SQLite)",
+      link: "https://gitrip.fly.dev",
+      imgs: [
+        "/thumbs/gitrip.png",
+        "/thumbs/gitrip-2.png",
+        "/thumbs/gitrip-3.png",
+        "/thumbs/gitrip-4.png",
+        "/thumbs/gitrip-5.png",
+      ],
+    },
+    {
       name: "WVS Official Website (Laravel, React, MySQL)",
       link: "https://vocaloidsoc.co.uk/about",
       imgs: [
@@ -183,11 +194,6 @@ function Portfolio() {
       name: "Ticket Selling Website (Flask, PostgreSQL)",
       link: "",
       imgs: ["/thumbs/webdev.png", "/thumbs/webdev-2.png"]
-    },
-    {
-      name: "GiTrip - Git-Inspired Trip Planner (Node.js, Express, SQLite)",
-      link: "https://gitrip.fly.dev",
-      imgs: ["/thumbs/gitrip.png", "/thumbs/gitrip-2.png"],
     },
   ];
 

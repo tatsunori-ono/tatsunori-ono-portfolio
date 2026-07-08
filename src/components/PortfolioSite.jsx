@@ -69,7 +69,7 @@ function Intro({ t }) {
         <img
           src="/me.jpg"
           alt="Tatsunori Ono"
-          className="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover shadow-lg shrink-0"
+          className="w-48 h-48 sm:w-60 sm:h-60 rounded-full object-cover shadow-lg shrink-0"
         />
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold">{t.intro.title}</h2>

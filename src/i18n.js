@@ -2,7 +2,7 @@ export const content = {
   en: {
     nav: { intro: "Intro", experience: "Experience", portfolio: "Portfolio" },
     intro: {
-      title: "Nice to meet you, I am Tatsunori Ono.",
+      title: "初めまして, I am Tatsunori Ono.",
       paragraphs: [
         "I am a Computer Science student at the University of Warwick, passionate about software engineering and web development, as well as financial technology (as I am a stock trader). I love thinking about complex ideas and solving problems in real life using the power of computers and mathematics.",
         "I also love all things Vocaloid and creating multimedia. Turning creative ideas into interactive experiences is the part I enjoy (as you can tell from the astroids you see swirling behind this text).",
@@ -81,7 +81,7 @@ export const content = {
   ja: {
     nav: { intro: "イントロ", experience: "経験", portfolio: "作品集" },
     intro: {
-      title: "初めまして、小野辰徳です。",
+      title: "初めまして、小野辰典です。",
       paragraphs: [
         "私はウォーリック大学でコンピューターサイエンスを専攻する学生で、ソフトウェアエンジニアリングとWeb開発、そして金融工学（個人投資家として株式トレードも行っています）に情熱を注いでいます。複雑なアイデアについて考え、コンピューターと数学の力を使って現実の問題を解決することが大好きです。",
         "また、ボーカロイドをはじめとするマルチメディア制作全般が大好きです。創造的なアイデアをインタラクティブな体験へと変えていくことに、大きなやりがいを感じています（背景を漂うアステロイドからもその一端が伝わるかもしれません）。",

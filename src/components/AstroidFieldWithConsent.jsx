@@ -6,10 +6,8 @@ import { ParametricGeometry } from "three/examples/jsm/geometries/ParametricGeom
 export default function AstroidFieldWithConsent() {
   const mountRef           = useRef(null);
   /* ── UI state ── */
-  const [audioConsent, setAudioConsent] = useState(null); // null | "yes" | "no"
   const [audioReady,   setAudioReady]   = useState(false);
   const [isPlaying,    setIsPlaying]    = useState(false);
-  const [errorMsg,     setErrorMsg]     = useState("");
   const [webglAvailable, setWebglAvailable] = useState(null); // null | true | false
 
   /* ── audio refs ── */
@@ -44,6 +42,7 @@ export default function AstroidFieldWithConsent() {
     const testCanvas = document.createElement("canvas");
     if (!canCreateWebGL(testCanvas)) {
       setWebglAvailable(false);
+      console.error("WebGL is unavailable in this environment");
       return;
     }
     setWebglAvailable(true);
@@ -60,7 +59,7 @@ export default function AstroidFieldWithConsent() {
       renderer = new THREE.WebGLRenderer({ antialias: true });
     } catch (e) {
       setWebglAvailable(false);
-      setErrorMsg(`WebGL init failed: ${e instanceof Error ? e.message : String(e)}`);
+      console.error("WebGL init failed:", e);
       return;
     }
     renderer.setSize(w, h); mount.appendChild(renderer.domElement);
@@ -151,7 +150,7 @@ export default function AstroidFieldWithConsent() {
         if (!res.ok) throw new Error(`fetch failed (${res.status})`);
         const buf = await res.arrayBuffer(); const decoded = await ctx.decodeAudioData(buf);
         if (cancelled) return; bufferRef.current = decoded; setAudioReady(true);
-      } catch (e) { setErrorMsg(String(e)); }
+      } catch (e) { console.error("Audio preload failed:", e); }
     })();
 
     return () => {
@@ -174,15 +173,22 @@ export default function AstroidFieldWithConsent() {
       sourceRef.current = src; analyserRef.current = an;
       freqArrayRef.current = new Uint8Array(an.frequencyBinCount);
       setIsPlaying(true);
-    } catch (e) { setErrorMsg(String(e)); }
+    } catch (e) { console.error("Failed to start audio:", e); }
   };
   const pauseAudio = () => {
     try {
       sourceRef.current?.stop(); sourceRef.current?.disconnect(); analyserRef.current?.disconnect();
       sourceRef.current = null; analyserRef.current = null; setIsPlaying(false);
-    } catch (e) { setErrorMsg(String(e)); }
+    } catch (e) { console.error("Failed to pause audio:", e); }
   };
-  const handleConsent = (allow) => { setAudioConsent(allow ? "yes" : "no"); if (allow) startAudio(); };
+
+  /* ── start audio silently on first user interaction (browsers block autoplay) ── */
+  useEffect(() => {
+    const tryStart = () => { if (bufferRef.current && !sourceRef.current) startAudio(); };
+    const events = ["click", "keydown", "touchstart"];
+    events.forEach((ev) => window.addEventListener(ev, tryStart, { once: true }));
+    return () => events.forEach((ev) => window.removeEventListener(ev, tryStart));
+  }, []);
 
   /* ─────────────── JSX ─────────────── */
   return (
@@ -193,33 +199,6 @@ export default function AstroidFieldWithConsent() {
           <span key={i} style={{ "--i": i }}>{ch === " " ? "\u00A0" : ch}</span>
         ))}
       </h1>
-
-      {/* consent banner */}
-      {audioConsent === null && (
-        <div
-          style={{
-            position: "absolute", inset: 0,
-            background: "rgba(255,255,255,0.9)",
-            display: "flex", flexDirection: "column",
-            alignItems: "center", justifyContent: "center",
-            fontFamily: "system-ui, sans-serif", zIndex: 20, padding: 32,
-          }}
-        >
-          <p
-            style={{
-              marginBottom: 24, fontSize: 20, maxWidth: 480, textAlign: "center",
-              display: "flex", alignItems: "center", gap: 10, justifyContent: "center",
-            }}
-          >
-            <i className="fas fa-volume-up" />
-            This site contains audio.&nbsp;Allow playback?
-          </p>
-          <div style={{ display: "flex", gap: 16 }}>
-            <button onClick={() => handleConsent(true)} style={btnStyle}>Yes</button>
-            <button onClick={() => handleConsent(false)} style={btnStyle}>No</button>
-          </div>
-        </div>
-      )}
 
       {/* WebGL fallback */}
       {webglAvailable === false && (
@@ -243,45 +222,26 @@ export default function AstroidFieldWithConsent() {
       )}
 
       {/* play / pause controls */}
-      {audioConsent === "yes" && (
-        <div
-          style={{
-            position: "absolute", top: 60, left: 16,
-            display: "flex", gap: 8, alignItems: "center",
-            fontFamily: "system-ui, sans-serif", zIndex: 10,
-          }}
-        >
-          {!isPlaying ? (
-            <button onClick={startAudio} disabled={!audioReady} style={btnSmall(audioReady)}>
-              ▶ Play
-            </button>
-          ) : (
-            <button onClick={pauseAudio} style={btnSmall(true)}>⏸ Pause</button>
-          )}
-          <span style={{ fontSize: 12, opacity: 0.7 }}>
-            {audioReady ? "Audio loaded" : "Loading audio…"}
-          </span>
-        </div>
-      )}
-
-      {/* error box */}
-      {errorMsg && (
-        <div style={{
-          position: "absolute", bottom: 16, left: 16, right: 16,
-          background: "rgba(255,0,0,0.08)", border: "1px solid rgba(255,0,0,0.3)",
-          padding: 8, borderRadius: 8, color: "#900", fontSize: 12, zIndex: 10,
-          fontFamily: "system-ui, sans-serif",
-        }}>{errorMsg}</div>
-      )}
+      <div
+        style={{
+          position: "absolute", top: 60, left: 16,
+          display: "flex", gap: 8, alignItems: "center",
+          fontFamily: "system-ui, sans-serif", zIndex: 10,
+        }}
+      >
+        {!isPlaying ? (
+          <button onClick={startAudio} disabled={!audioReady} style={btnSmall(audioReady)}>
+            ▶ Play
+          </button>
+        ) : (
+          <button onClick={pauseAudio} style={btnSmall(true)}>⏸ Pause</button>
+        )}
+      </div>
     </div>
   );
 }
 
 /* small button styles */
-const btnStyle = {
-  padding: "10px 20px", borderRadius: 8, border: "1px solid #ccc",
-  background: "#fff", cursor: "pointer", fontSize: 16,
-};
 const btnSmall = (enabled) => ({
   padding: "6px 12px", borderRadius: 8, border: "1px solid #ccc",
   background: enabled ? "#fff" : "#eee", cursor: enabled ? "pointer" : "not-allowed",

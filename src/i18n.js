@@ -1,6 +1,6 @@
 export const content = {
   en: {
-    nav: { intro: "Intro", experience: "Experience", portfolio: "Portfolio" },
+    nav: { intro: "Intro", experience: "Experience", portfolio: "Portfolio", contact: "Contact" },
     intro: {
       title: "初めまして, I am Tatsunori Ono.",
       paragraphs: [
@@ -76,10 +76,19 @@ export const content = {
       },
     },
     portfolio: { heading: "Portfolio" },
+    contact: {
+      heading: "Contact",
+      subheading:
+        "Feel free to reach out — I'm always happy to chat about software, Vocaloid, or trading.",
+      email: "Email",
+      linkedin: "LinkedIn",
+      github: "GitHub",
+      resume: "Download Resume (PDF)",
+    },
   },
 
   ja: {
-    nav: { intro: "イントロ", experience: "経験", portfolio: "作品集" },
+    nav: { intro: "イントロ", experience: "経験", portfolio: "作品集", contact: "お問い合わせ" },
     intro: {
       title: "初めまして、小野辰典です。",
       paragraphs: [
@@ -155,5 +164,14 @@ export const content = {
       },
     },
     portfolio: { heading: "作品集" },
+    contact: {
+      heading: "お問い合わせ",
+      subheading:
+        "ソフトウェア、ボーカロイド、株式トレードについてなど、お気軽にご連絡ください。",
+      email: "メール",
+      linkedin: "LinkedIn",
+      github: "GitHub",
+      resume: "履歴書をダウンロード (PDF)",
+    },
   },
 };

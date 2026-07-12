@@ -9,6 +9,7 @@ export default function AstroidFieldWithConsent() {
   const [audioReady,   setAudioReady]   = useState(false);
   const [isPlaying,    setIsPlaying]    = useState(false);
   const [webglAvailable, setWebglAvailable] = useState(null); // null | true | false
+  const [sceneReady,   setSceneReady]   = useState(false);
 
   /* ── audio refs ── */
   const audioCtxRef     = useRef(null);
@@ -23,12 +24,24 @@ export default function AstroidFieldWithConsent() {
       .name-animate{
         position:absolute;top:12px;left:16px;
         font-family:Futura,ui-sans-serif,sans-serif;
-        font-weight:700;font-size:2.25rem;line-height:1;z-index:10;
+        font-weight:700;font-size:clamp(1.25rem, 5vw, 2.25rem);line-height:1;z-index:10;
         display:inline-block;white-space:nowrap;
       }
       .name-animate span{display:inline-block;
         animation:slideLR 2s calc(var(--i)*.12s) infinite alternate ease-in-out;}
       @keyframes slideLR{from{transform:translateX(-4px);}to{transform:translateX(4px);}}
+      .astroid-canvas-wrap{opacity:0;transition:opacity .6s ease;}
+      .astroid-canvas-wrap.ready{opacity:1;}
+      .astroid-loading{
+        position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+        background:#fff;z-index:12;transition:opacity .4s ease;
+      }
+      .astroid-spinner{
+        width:32px;height:32px;border-radius:50%;
+        border:3px solid rgba(0,0,0,0.15);border-top-color:rgba(0,0,0,0.6);
+        animation:astroidSpin .8s linear infinite;
+      }
+      @keyframes astroidSpin{to{transform:rotate(360deg);}}
     `;
     const tag = document.createElement("style");
     tag.innerHTML = css; document.head.appendChild(tag);
@@ -103,8 +116,55 @@ export default function AstroidFieldWithConsent() {
     };
     window.addEventListener("resize", onResize);
 
+    /* click-to-spawn asteroids */
+    const raycaster = new THREE.Raycaster();
+    const ndc = new THREE.Vector2();
+    const MAX_TRANSIENT = 25;
+    let downX = 0, downY = 0, downTime = 0;
+
+    const spawnAstroidAt = (clientX, clientY) => {
+      const transientCount = astroids.reduce((n, a) => n + (a.transient ? 1 : 0), 0);
+      if (transientCount >= MAX_TRANSIENT) return;
+
+      const rect = renderer.domElement.getBoundingClientRect();
+      ndc.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+      ndc.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(ndc, camera);
+      const distance = THREE.MathUtils.randFloat(4, 9);
+      const pos = raycaster.ray.origin
+        .clone()
+        .add(raycaster.ray.direction.clone().multiplyScalar(distance));
+
+      const base = 0.3 + Math.random() * 0.4;
+      const mesh = new THREE.Mesh(geom, mat);
+      mesh.position.copy(pos);
+      mesh.scale.setScalar(0.001);
+      const rotX = (Math.random() - 0.5) * 1.2;
+      const rotY = (Math.random() - 0.5) * 1.2;
+      scene.add(mesh);
+      astroids.push({
+        mesh, base, rotX, rotY,
+        transient: true,
+        spawnTime: clock.getElapsedTime(),
+      });
+    };
+
+    const onPointerDown = (e) => {
+      downX = e.clientX; downY = e.clientY; downTime = performance.now();
+    };
+    const onPointerUp = (e) => {
+      if (e.target !== renderer.domElement) return;
+      const dist = Math.hypot(e.clientX - downX, e.clientY - downY);
+      if (dist < 6 && performance.now() - downTime < 500) {
+        spawnAstroidAt(e.clientX, e.clientY);
+      }
+    };
+    renderer.domElement.addEventListener("pointerdown", onPointerDown);
+    renderer.domElement.addEventListener("pointerup", onPointerUp);
+
     /* render loop */
-    const clock = new THREE.Clock(); let running = true;
+    const clock = new THREE.Clock(); let running = true; let firstFrame = true;
+    const GROW_TIME = 0.4, LIFETIME = 2.5, SHRINK_TIME = 1;
     const animate = () => {
       if (!running) return; requestAnimationFrame(animate);
       const dt = clock.getDelta(); controls.update();
@@ -121,19 +181,42 @@ export default function AstroidFieldWithConsent() {
       }
 
       /* update astroids */
-      astroids.forEach(a => {
+      const now = clock.getElapsedTime();
+      for (let i = astroids.length - 1; i >= 0; i--) {
+        const a = astroids[i];
         a.mesh.rotation.x += a.rotX * dt; a.mesh.rotation.y += a.rotY * dt;
-        const target = a.base + norm * strength;
-        a.mesh.scale.setScalar(THREE.MathUtils.lerp(a.mesh.scale.x, target, 0.15));
-      });
+
+        if (a.transient) {
+          const age = now - a.spawnTime;
+          let scale;
+          if (age < GROW_TIME) {
+            scale = THREE.MathUtils.lerp(0, a.base, age / GROW_TIME);
+          } else if (age < GROW_TIME + LIFETIME) {
+            scale = a.base;
+          } else if (age < GROW_TIME + LIFETIME + SHRINK_TIME) {
+            scale = THREE.MathUtils.lerp(a.base, 0, (age - GROW_TIME - LIFETIME) / SHRINK_TIME);
+          } else {
+            scene.remove(a.mesh);
+            astroids.splice(i, 1);
+            continue;
+          }
+          a.mesh.scale.setScalar(scale + norm * strength * 0.3);
+        } else {
+          const target = a.base + norm * strength;
+          a.mesh.scale.setScalar(THREE.MathUtils.lerp(a.mesh.scale.x, target, 0.15));
+        }
+      }
 
       renderer.render(scene, camera);
+      if (firstFrame) { firstFrame = false; setSceneReady(true); }
     };
     animate();
 
     /* cleanup */
     return () => {
       running = false; window.removeEventListener("resize", onResize);
+      renderer.domElement.removeEventListener("pointerdown", onPointerDown);
+      renderer.domElement.removeEventListener("pointerup", onPointerUp);
       geom.dispose(); mat.dispose(); renderer.dispose();
       if (mount.contains(renderer.domElement)) mount.removeChild(renderer.domElement);
     };
@@ -192,7 +275,18 @@ export default function AstroidFieldWithConsent() {
 
   /* ─────────────── JSX ─────────────── */
   return (
-    <div ref={mountRef} style={{ width: "100%", height: "100vh", position: "relative" }}>
+    <div
+      ref={mountRef}
+      className={"astroid-canvas-wrap" + (sceneReady ? " ready" : "")}
+      style={{ width: "100%", height: "100vh", position: "relative" }}
+    >
+      {/* loading indicator, shown until first frame renders */}
+      {webglAvailable !== false && !sceneReady && (
+        <div className="astroid-loading">
+          <div className="astroid-spinner" />
+        </div>
+      )}
+
       {/* animated name */}
       <h1 className="name-animate">
         {"Tatsunori Ono".split("").map((ch, i) => (

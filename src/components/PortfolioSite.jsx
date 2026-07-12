@@ -15,13 +15,13 @@ export default function PortfolioSite() {
       <AstroidFieldWithConsent />
 
       {/* Nav */}
-      <nav className="fixed top-4 right-8 z-30 flex items-center gap-4 text-sm md:text-base">
-        {["intro", "experience", "portfolio"].map((id) => (
+      <nav className="fixed top-16 right-2 sm:top-4 sm:right-8 z-30 flex flex-wrap items-center justify-end gap-1.5 sm:gap-4 text-xs sm:text-base max-w-[calc(100vw-1rem)]">
+        {["intro", "experience", "portfolio", "contact"].map((id) => (
           <button
             key={id}
             onClick={() => setSection(id)}
             className={
-              "px-3 py-1 rounded-md border transition-all duration-200 " +
+              "px-2.5 py-1 sm:px-3 sm:py-1 rounded-md border transition-all duration-200 " +
               (section === id
                 ? "bg-black text-white border-black"
                 : "bg-white/70 text-black border-black/20 hover:bg-black/90 hover:text-white")
@@ -38,7 +38,7 @@ export default function PortfolioSite() {
               key={code}
               onClick={() => setLang(code)}
               className={
-                "px-3 py-1 text-xs md:text-sm transition-all duration-200 " +
+                "px-2.5 py-1 sm:px-3 sm:py-1 text-xs sm:text-sm transition-all duration-200 " +
                 (lang === code
                   ? "bg-black text-white"
                   : "bg-white/70 text-black hover:bg-black/90 hover:text-white")
@@ -51,11 +51,12 @@ export default function PortfolioSite() {
       </nav>
 
       {/* Card container */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-        <div className="w-[90%] max-w-5xl bg-white/80 backdrop-blur-md p-6 rounded-2xl shadow-xl pointer-events-auto overflow-y-auto max-h-[80vh]">
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 px-2">
+        <div className="w-full sm:w-[90%] max-w-5xl bg-white/80 backdrop-blur-md p-4 sm:p-6 rounded-2xl shadow-xl pointer-events-auto overflow-y-auto max-h-[75vh] sm:max-h-[80vh]">
           {section === "intro" && <Intro t={t} />}
           {section === "experience" && <Experience t={t} />}
           {section === "portfolio" && <Portfolio t={t} />}
+          {section === "contact" && <Contact t={t} />}
         </div>
       </div>
     </div>
@@ -140,7 +141,7 @@ function Portfolio({ t }) {
     },
     {
       name: "Specialita (Ruby, JavaScript, SQLite)",
-      link: "",
+      link: "https://github.com/tatsunori-ono/Specialita_Refined",
       imgs: ["/thumbs/specialita.png", "/thumbs/specialita-2.png"],
     },
     {
@@ -168,6 +169,15 @@ function Portfolio({ t }) {
       link: "",
       imgs: ["/thumbs/webdev.png", "/thumbs/webdev-2.png"]
     },
+    {
+      name: "STV Counter - Single Transferable Vote Calculator (JavaScript)",
+      link: "https://github.com/tatsunori-ono/stv-counter",
+      imgs: [
+        "/thumbs/stv-election-setup.png",
+        "/thumbs/stv-ballot-papers.png",
+        "/thumbs/stv-election-results.png",
+      ],
+    },
   ];
 
   return (
@@ -177,6 +187,44 @@ function Portfolio({ t }) {
         {portfolio.map((p) => (
           <ProjectCard key={p.name} {...p} />
         ))}
+      </div>
+    </section>
+  );
+}
+
+function Contact({ t }) {
+  const { heading, subheading, email, linkedin, github, resume } = t.contact;
+  const links = [
+    { label: email, href: "mailto:tatsunori.ono@outlook.com", icon: "fa-solid fa-envelope" },
+    { label: linkedin, href: "https://www.linkedin.com/in/tatsunori-ono-astroid", icon: "fa-brands fa-linkedin" },
+    { label: github, href: "https://github.com/tatsunori-ono", icon: "fa-brands fa-github" },
+  ];
+
+  return (
+    <section className="space-y-6">
+      <h2 className="text-2xl font-semibold">{heading}</h2>
+      <p>{subheading}</p>
+      <div className="flex flex-col sm:flex-row flex-wrap gap-3">
+        {links.map((l) => (
+          <a
+            key={l.label}
+            href={l.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-black/20 bg-white/70 hover:bg-black hover:text-white transition-colors duration-200"
+          >
+            <i className={l.icon} aria-hidden="true"></i>
+            <span>{l.label}</span>
+          </a>
+        ))}
+        <a
+          href="/Tatsunori_Ono_CV.pdf"
+          download
+          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-black bg-black text-white hover:bg-black/80 transition-colors duration-200"
+        >
+          <i className="fa-solid fa-file-arrow-down" aria-hidden="true"></i>
+          <span>{resume}</span>
+        </a>
       </div>
     </section>
   );
